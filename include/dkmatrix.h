@@ -11,6 +11,7 @@
  * *els = 1 3 5 2 4 6
  */
 #pragma once
+#include <stdbool.h>
 /*
 https://en.wikipedia.org/wiki/Matrix_representation
 https://en.wikipedia.org/wiki/Multiply%E2%80%93accumulate_operation
@@ -21,11 +22,11 @@ typedef struct dkmatrix dkmatrix;
 typedef struct dkmatrix {
     signed char rowsc;
     signed char colsc;
-    short *els;
+    int *els;
 } dkmatrix;
 
 dkmatrix* dkmatrix_parse(char* s);
-short dkmatrix_index(dkmatrix* dkm, short row, short col);
+int dkmatrix_index(dkmatrix* dkm, short row, short col);
 char* dkmatrix_tostr(dkmatrix* dkm);
 char* dkmatrixbool_tostr(dkmatrix* dkm);
 bool dkmatrix_add_isdef(dkmatrix* a, dkmatrix* b);

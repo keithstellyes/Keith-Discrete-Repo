@@ -31,12 +31,12 @@ dkmatrix* dkmatrix_parse(char* s)
     sscanf(tokenread, "%d", &colc);
     result->colsc = colc;
     
-    short *values = malloc(sizeof(short)*rowc*colc);
+    int *values = malloc(sizeof(int)*rowc*colc);
     result->els = values;
     
     READ_TOKEN();
     while (tokenread != NULL) {
-        sscanf(tokenread, "%hd", values);
+        sscanf(tokenread, "%d", values);
         values++;
         READ_TOKEN();
     }
@@ -45,7 +45,7 @@ dkmatrix* dkmatrix_parse(char* s)
     #undef READ_TOKEN
 }
 
-short dkmatrix_index(dkmatrix* dkm, short row, short col)
+int dkmatrix_index(dkmatrix* dkm, short row, short col)
 {
     int offset = row + col*(dkm->rowsc);
     
@@ -83,36 +83,9 @@ char* dkmatrix_tostr(dkmatrix* dkm)
     return result;
 }
 
-char* dkmatrixbool_tostr(dkmatrix* dkm)
-{
-    dkmatrix _dkm = *dkm;
-    int maxchars_perval = 2;
-    /* +1 for each newline. */
-    int maxchars_perrow = maxchars_perval * _dkm.colsc + 1;
-    /* +1 for null char */
-    int maxchars_forresult = maxchars_perrow * _dkm.rowsc + 1;
-    char *result = (char*) calloc(maxchars_forresult, sizeof(char));
-    
-    int rowi, coli;
-
-    for (rowi = 0; rowi < _dkm.rowsc; ++rowi){
-        for (coli = 0; coli < _dkm.colsc; ++coli){
-            int elsidx = coli*(_dkm.rowsc);
-            if (*(_dkm.els+elsidx) != 0) {
-                strcat(result, "1 ");
-            } else {
-                strcat(result, "0 ");
-            }
-        }
-        _dkm.els++;
-        strcat(result, "\n");
-    }
-    return result;
-}
-
 bool dkmatrix_add_isdef(dkmatrix* a, dkmatrix* b)
 {
-    return a.rowsc == b.rowsc && a.colsc == b.colsc;
+    return a->rowsc == b->rowsc && a->colsc == b->colsc;
 }
 
 /* We can add matrices row-major or column-major agnostically :) */
@@ -129,7 +102,7 @@ dkmatrix* dkmatrix_add(dkmatrix* ap, dkmatrix* bp)
     result->colsc = a.colsc;
     
     int valscount = a.rowsc*a.colsc;
-    short *resultvalues = malloc(valscount*sizeof(dkmatrix));
+    int *resultvalues = malloc(valscount*sizeof(dkmatrix));
     result->els = resultvalues;
     int i;
     for(i = 0; i < valscount; i++) {
@@ -169,7 +142,7 @@ dkmatrix* dkmatrix_mult(dkmatrix* ap, dkmatrix* bp)
     result->colsc = b.colsc;
     int totalvaluescount = a.rowsc*b.colsc;
     
-    short *resultvalues = calloc(totalvaluescount, sizeof(short));
+    int *resultvalues = calloc(totalvaluescount, sizeof(short));
     result->els = resultvalues;
     
     int rowi, coli;
@@ -178,9 +151,9 @@ dkmatrix* dkmatrix_mult(dkmatrix* ap, dkmatrix* bp)
         for (rowi = 0; rowi < result->rowsc; rowi++){
             int j;
             for(j = 0; j < a.colsc; j++) {
-                short resultvalue = *(resultvalues);
-                short aval = dkmatrix_index(ap, rowi, j);
-                short bval = dkmatrix_index(bp, j, coli);
+                int resultvalue = *(resultvalues);
+                int aval = dkmatrix_index(ap, rowi, j);
+                int bval = dkmatrix_index(bp, j, coli);
                 // fma?
                 *(resultvalues) = resultvalue + aval * bval;
             }

@@ -55,7 +55,7 @@ int main()
     printf("\n%s", dkmatrix_tostr(dkmb));
     
     dkmatrix *dkmaTIMESdkmb = dkmatrix_mult(dkma, dkmb);
-    printf("\n%s", dkmatrix_tostr(dkmaTIMESdkmb));
+    printf("\n%s", dkmatrixbool_tostr(dkmaTIMESdkmb));
     return EXIT_SUCCESS;
 }
  
